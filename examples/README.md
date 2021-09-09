@@ -38,9 +38,9 @@ For example, to run a two-player game and a spectator on your local machine,
 run these commands in separate terminals:
 
 ```shell
-cargo run --example box_game_p2p -- --local-port 7000 --players localhost 127.0.0.1:7001 --spectators 127.0.0.1:7002
-cargo run --example box_game_p2p -- --local-port 7001 --players 127.0.0.1:7000 localhost
-cargo run --example box_game_spectator -- --local-port 7002 --num-players 2 --host 127.0.0.1:7000 
+cargo run --example box_game_p2p -- --local-port 7000 --players localhost [::1]:7001 --spectators [::1]:7002
+cargo run --example box_game_p2p -- --local-port 7001 --players [::1]:7000 localhost
+cargo run --example box_game_spectator -- --local-port 7002 --num-players 2 --host [::]:7000 
 ```
 
 ## BoxGame SyncTest
