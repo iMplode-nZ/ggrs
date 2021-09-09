@@ -218,8 +218,7 @@ pub fn start_p2p_session(
     }
 
     // udp nonblocking socket creation
-    let addr = SocketAddrV6::new(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0), local_port, 0, 0);
-    //let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), local_port); //TODO: IpV6?
+    let addr = SocketAddrV6::new(Ipv6Addr::UNSPECIFIED, local_port, 0, 0);
     let socket =
         Box::new(UdpNonBlockingSocket::new(addr).map_err(|_| GGRSError::SocketCreationFailed)?);
 
@@ -291,8 +290,7 @@ pub fn start_p2p_spectator_session(
     }
 
     // udp nonblocking socket creation
-    let addr = SocketAddrV6::new(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0), local_port, 0, 0);
-    //let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), local_port); //TODO: IpV6?
+    let addr = SocketAddrV6::new(Ipv6Addr::UNSPECIFIED, local_port, 0, 0);
     let socket =
         Box::new(UdpNonBlockingSocket::new(addr).map_err(|_| GGRSError::SocketCreationFailed)?);
 
