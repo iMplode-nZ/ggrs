@@ -13,7 +13,7 @@ use crate::{
 use std::collections::vec_deque::Drain;
 use std::collections::HashMap;
 use std::collections::VecDeque;
-use std::net::SocketAddr;
+use std::net::{AddrParseError, IpAddr, SocketAddr};
 use std::time::Duration;
 
 /// The minimum amounts of frames between sleeps to compensate being ahead of other players
@@ -640,8 +640,16 @@ impl P2PSession {
             });
         }
 
+        let mapped_addr =
+            P2PSession::map_ipv4_to_ipv6(addr).map_err(|_| GGRSError::SocketCreationFailed)?;
+
         // create a udp protocol endpoint that handles all the messaging to that remote player
-        let mut endpoint = UdpProtocol::new(player_handle, addr, self.num_players, self.input_size);
+        let mut endpoint = UdpProtocol::new(
+            player_handle,
+            mapped_addr,
+            self.num_players,
+            self.input_size,
+        );
         endpoint.set_disconnect_notify_start(self.disconnect_notify_start);
         endpoint.set_disconnect_timeout(self.disconnect_timeout);
 
@@ -970,5 +978,16 @@ impl P2PSession {
             .values()
             .filter_map(Player::spectator_as_endpoint)
             .count()
+    }
+
+    /// maps an ipv4 address to an ipv6 address <https://en.wikipedia.org/wiki/IPv6#IPv4-mapped_IPv6_addresses>
+    fn map_ipv4_to_ipv6(addr: SocketAddr) -> Result<SocketAddr, AddrParseError> {
+        match addr {
+            SocketAddr::V4(socket_addr_v4) => Ok(SocketAddr::new(
+                IpAddr::V6(socket_addr_v4.ip().to_ipv6_mapped()),
+                socket_addr_v4.port(),
+            )),
+            SocketAddr::V6(_) => Ok(addr),
+        }
     }
 }

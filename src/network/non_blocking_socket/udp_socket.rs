@@ -29,6 +29,7 @@ impl UdpNonBlockingSocket {
 impl NonBlockingSocket for UdpNonBlockingSocket {
     fn send_to(&mut self, msg: &UdpMessage, addr: SocketAddr) {
         let buf = bincode::serialize(&msg).unwrap();
+        println!("{:?}", addr);
         self.socket.send_to(&buf, addr).unwrap();
     }
 

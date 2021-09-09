@@ -7,7 +7,7 @@
 
 //#![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
 
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::net::{Ipv6Addr, SocketAddr, SocketAddrV6};
 
 pub use error::GGRSError;
 pub use frame_info::{GameInput, GameState};
@@ -69,9 +69,9 @@ pub enum PlayerType {
     /// This player plays on the local device.
     Local,
     /// This player plays on a remote device identified by the socket address.
-    Remote(std::net::SocketAddr),
+    Remote(SocketAddr),
     /// This player spectates on a remote device identified by the socket address. They do not contribute to the game input.
-    Spectator(std::net::SocketAddr),
+    Spectator(SocketAddr),
 }
 
 impl Default for PlayerType {
@@ -218,7 +218,8 @@ pub fn start_p2p_session(
     }
 
     // udp nonblocking socket creation
-    let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), local_port); //TODO: IpV6?
+    let addr = SocketAddrV6::new(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0), local_port, 0, 0);
+    //let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), local_port); //TODO: IpV6?
     let socket =
         Box::new(UdpNonBlockingSocket::new(addr).map_err(|_| GGRSError::SocketCreationFailed)?);
 
@@ -290,7 +291,8 @@ pub fn start_p2p_spectator_session(
     }
 
     // udp nonblocking socket creation
-    let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), local_port); //TODO: IpV6?
+    let addr = SocketAddrV6::new(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0), local_port, 0, 0);
+    //let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), local_port); //TODO: IpV6?
     let socket =
         Box::new(UdpNonBlockingSocket::new(addr).map_err(|_| GGRSError::SocketCreationFailed)?);
 

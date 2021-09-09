@@ -1,5 +1,5 @@
 use ggrs::{PlayerType, SessionState};
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 
 use serial_test::serial;
 
@@ -8,14 +8,14 @@ mod stubs;
 #[test]
 #[serial]
 fn test_create_session() {
-    let host_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 7777);
+    let host_addr = SocketAddr::new(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1)), 7777);
     assert!(ggrs::start_p2p_spectator_session(1, stubs::INPUT_SIZE, 9999, host_addr).is_ok());
 }
 
 #[test]
 #[serial]
 fn test_start_session() {
-    let host_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 7777);
+    let host_addr = SocketAddr::new(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1)), 7777);
     let mut spec_sess =
         ggrs::start_p2p_spectator_session(1, stubs::INPUT_SIZE, 9999, host_addr).unwrap();
     assert!(spec_sess.start_session().is_ok());
@@ -25,8 +25,8 @@ fn test_start_session() {
 #[test]
 #[serial]
 fn test_synchronize_with_host() {
-    let host_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 7777);
-    let spec_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 8888);
+    let host_addr = SocketAddr::new(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1)), 7777);
+    let spec_addr = SocketAddr::new(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1)), 8888);
 
     let mut host_sess = ggrs::start_p2p_session(1, stubs::INPUT_SIZE, 7777).unwrap();
     let mut spec_sess =
